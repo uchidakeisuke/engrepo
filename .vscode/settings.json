@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": false,
+  "[typescript]": {
+      "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode" // これを入れない場合は、手動でCmd+Pで設定しないといけない
+}

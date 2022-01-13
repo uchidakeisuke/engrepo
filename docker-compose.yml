@@ -1,0 +1,57 @@
+version: "3"
+services: 
+    nginx:
+        container_name: mynginx
+        image: mynginx:latest
+        build: 
+            context: ./nginx
+            dockerfile: nginx.dockerfile
+        ports: 
+            - 80:80
+            - 443:443
+            - 5432:5432
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        depends_on: 
+            - app
+            - ui
+            - postgresql
+        command: ["nginx", "-g", "daemon off;"]
+
+    postgresql:
+        container_name: mypostgresql
+        image: mypostgresql:latest
+        build: 
+            context: ./
+            dockerfile: postgresql.dockerfile
+        volumes:
+            - ./engapp/src/infrastructure/datastore/postgresql/initdb:/docker-entrypoint-initdb.d
+            - ./engapp/src/infrastructure/datastore/postgresql/data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: mydb
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: password
+
+    app:
+        container_name: myapp
+        image: myapp:latest
+        build: 
+            context: ./
+            dockerfile: app.dockerfile
+        volumes: 
+            - ./engapp:/app
+        depends_on: 
+            - postgresql
+        working_dir: /app
+        command: ["npm", "run", "start:debug"]
+
+    ui:
+        container_name: myui
+        image: myui:latest
+        build: 
+            context: ./
+            dockerfile: ui.dockerfile
+        volumes: 
+            - ./ui:/ui
+        working_dir: /ui
+        command: ["npm", "run", "dev"]
